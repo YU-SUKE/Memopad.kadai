@@ -6,22 +6,48 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.text.Editable;
 import android.text.Selection;
 import android.widget.EditText;
+import android.widget.TextView;
+
 import java.text.DateFormat;
 import java.util.Date;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.ContentValues;
 import android.view.MenuInflater;
+import android.text.TextWatcher;
 
 public class MainActivity extends Activity {
 
+	private static final TextView et = null;
+	boolean memoChanged = false;	
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        TextWatcher tw = new TextWatcher(){
+        	 
+        	@Override
+        	public void afterTextChanged(Editable s){
+        		//TODO 自動生成されたメソッド・スタブ
+        	}
+        	@Override
+        	public void beforeTextChanged(CharSequence s, int start, int count, int after){
+        		//TODO 自動生成されたメソッド・スタブ
+        	}
+        	
+        	@Override
+        	public void onTextChanged(CharSequence s, int start, int before, int count){
+        		memoChanged = true;
+        	}
+        };
+        
+        et.addTextChangedListener(tw);
     }
-
+        
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -42,10 +68,12 @@ public class MainActivity extends Activity {
 				saveMemo();
 				break;
 			case R.id.menu_open:
+				if(memoChanged) saveMemo();
 				Intent i = new Intent(this,MemoList.class);
 				startActivityForResult(i,0);
 				break;
 			case R.id.menu_new:
+				if(memoChanged) saveMemo();
 				et.setText("");
 				break;
 		}
@@ -60,6 +88,7 @@ public class MainActivity extends Activity {
 			switch(requestCode){
 			case 0:
 				et.setText(data.getStringExtra("text"));
+				memoChanged = false;
 				break;
 			}
 		}
@@ -97,6 +126,7 @@ public class MainActivity extends Activity {
     		values.put("memo", memo);
     		db.insertOrThrow("memoDB", null,values);
     		memos.close();
+    		memoChanged = false;
     		}
     	}
     			
