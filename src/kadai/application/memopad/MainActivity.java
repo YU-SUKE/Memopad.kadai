@@ -20,16 +20,17 @@ import android.text.TextWatcher;
 
 public class MainActivity extends Activity {
 
-	private static final TextView et = null;
+	
 	boolean memoChanged = false;	
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EditText et = (EditText) findViewById(R.id.editText1);
         
         TextWatcher tw = new TextWatcher(){
-        	 
+        	
         	@Override
         	public void afterTextChanged(Editable s){
         		//TODO 自動生成されたメソッド・スタブ
